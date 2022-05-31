@@ -1,0 +1,23 @@
+{
+  "name": "stunning-succotash",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hrdtbs/stunning-succotash.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hrdtbs/stunning-succotash/issues"
+  },
+  "homepage": "https://github.com/hrdtbs/stunning-succotash#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.22.2"
+  }
+}
