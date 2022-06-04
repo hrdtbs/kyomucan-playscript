@@ -1,5 +1,5 @@
 {
-  "name": "stunning-succotash",
+  "name": "kyomucan-playscript",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hrdtbs/stunning-succotash.git"
+    "url": "git+https://github.com/hrdtbs/kyomucan-playscript.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hrdtbs/stunning-succotash/issues"
+    "url": "https://github.com/hrdtbs/kyomucan-playscript/issues"
   },
-  "homepage": "https://github.com/hrdtbs/stunning-succotash#readme",
+  "homepage": "https://github.com/hrdtbs/kyomucan-playscript#readme",
   "devDependencies": {
     "@playwright/test": "^1.22.2"
   },
