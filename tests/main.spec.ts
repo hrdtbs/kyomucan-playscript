@@ -1,3 +1,4 @@
+import { genICCardCSV } from "./../utils/genICCardCSV";
 import { test, expect, type Page } from "@playwright/test";
 import config from "../config";
 
@@ -18,7 +19,15 @@ test.beforeAll(async ({ browser }) => {
   await expect(page).toHaveURL("https://id.jobcan.jp/account/profile");
 });
 
+const ICCARD_DUMMY_DATA_PATH = "ic-card-dummy-data.csv";
+
 test("通勤交通費精算申請", async () => {
+  await genICCardCSV(
+    ICCARD_DUMMY_DATA_PATH,
+    config.work.office,
+    config.transportation
+  );
+
   page.goto("https://ssl.wf.jobcan.jp/#/request/new/112865/");
 
   // Click text=【通勤】交通費精算申請書
@@ -90,7 +99,7 @@ test("通勤交通費精算申請", async () => {
     // Opens the file chooser.
     page.locator('button:has-text("ICカード読込(CSVデータ)")').click(),
   ]);
-  await fileChooser.setFiles("data.csv");
+  await fileChooser.setFiles(ICCARD_DUMMY_DATA_PATH);
 
   // Check text=利用日 出発駅 到着駅 金額 >> input[type="checkbox"]
   await page
@@ -104,10 +113,13 @@ test("通勤交通費精算申請", async () => {
   const inputCount = await inputs.count();
 
   for (let i = 0; i < inputCount; i++) {
+    await inputs.nth(i).scrollIntoViewIfNeeded();
     await inputs.nth(i).click();
+
     await page
       .locator("text=× 交通手段 OK キャンセル >> textarea")
       .fill("電車");
+    await page.locator("text=OK").scrollIntoViewIfNeeded();
     await page.locator("text=OK").click();
   }
 

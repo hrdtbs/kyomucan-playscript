@@ -107,3 +107,4 @@ dist
 /playwright/.cache/
 
 config.ts
+ic-card-dummy-data.csv
