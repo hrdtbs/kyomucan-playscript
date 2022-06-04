@@ -1,18 +1,15 @@
-const config = {
+import { Config } from "./types";
+
+const config: Config = {
   email: "YOUR EMAIL",
   password: "YOUR PASSWORD",
   trainPass: {
     oneMonthFee: 16720,
   },
-  work: {
-    office: {
-      month: 6,
-      days: [],
-      weekdays: [2, 4],
-      excludes: [],
-    },
+  officeWork: {
+    weekdays: [2, 4],
   },
-  transportation: [
+  routes: [
     {
       from: "池袋",
       to: "東京",

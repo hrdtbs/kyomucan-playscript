@@ -22,11 +22,7 @@ test.beforeAll(async ({ browser }) => {
 const ICCARD_DUMMY_DATA_PATH = "ic-card-dummy-data.csv";
 
 test("通勤交通費精算申請", async () => {
-  await genICCardCSV(
-    ICCARD_DUMMY_DATA_PATH,
-    config.work.office,
-    config.transportation
-  );
+  await genICCardCSV(ICCARD_DUMMY_DATA_PATH, config.officeWork, config.routes);
 
   page.goto("https://ssl.wf.jobcan.jp/#/request/new/112865/");
 

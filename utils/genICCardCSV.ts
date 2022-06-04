@@ -1,5 +1,6 @@
 import { writeFileShiftJIS } from "./writeFileShiftJIS";
 import dayjs from "dayjs";
+import { Period, Routes } from "../types";
 
 const template = (rows: string) => {
   return `allocation_date
@@ -7,28 +8,18 @@ const template = (rows: string) => {
 ${rows}`;
 };
 
-interface Period {
-  weekdays: number[];
-}
-
-type Transportation = {
-  from: string;
-  to: string;
-  amount: number;
-}[];
-
 export const genICCardCSV = async (
   filePath: string,
   period: Period,
-  transportation: Transportation
+  routes: Routes
 ) => {
   const firstDay = dayjs().startOf("month");
   const dayCount = firstDay.daysInMonth();
-  const rows = [];
+  const rows: string[] = [];
   for (let date = 1; date < dayCount + 1; date++) {
     const day = firstDay.set("date", date);
     if (period.weekdays.includes(day.day())) {
-      transportation.forEach(({ from, to, amount }) => {
+      routes.forEach(({ from, to, amount }) => {
         rows.push(
           `${day.format("YYYY/MM/DD")},s,s,${from},s,s,${to},${amount},s,s,s`
         );
