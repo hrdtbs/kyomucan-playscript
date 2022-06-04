@@ -1,29 +1,24 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+import config from "../config";
 
-test("test", async ({ page }) => {
-  // Go to https://id.jobcan.jp/users/sign_in
+// @see https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
+let page: Page;
+
+test.beforeAll(async ({ browser }) => {
+  page = await browser.newPage();
   await page.goto("https://id.jobcan.jp/users/sign_in");
 
-  // Click [placeholder="メールアドレスまたはスタッフコード"]
   await page
     .locator('[placeholder="メールアドレスまたはスタッフコード"]')
-    .click();
+    .fill(config.email);
 
-  // Fill [placeholder="メールアドレスまたはスタッフコード"]
-  await page
-    .locator('[placeholder="メールアドレスまたはスタッフコード"]')
-    .fill(process.env.EMAIL);
+  await page.locator('[placeholder="パスワード"]').fill(config.password);
 
-  // Click [placeholder="パスワード"]
-  await page.locator('[placeholder="パスワード"]').click();
-
-  // Fill [placeholder="パスワード"]
-  await page.locator('[placeholder="パスワード"]').fill(process.env.PASSWORD);
-
-  // Click input:has-text("ログイン")
   await page.locator('input:has-text("ログイン")').click();
   await expect(page).toHaveURL("https://id.jobcan.jp/account/profile");
+});
 
+test("通勤交通費精算申請", async () => {
   page.goto("https://ssl.wf.jobcan.jp/#/request/new/112865/");
 
   // Click text=【通勤】交通費精算申請書
@@ -84,11 +79,41 @@ test("test", async ({ page }) => {
     )
     .click();
 
+  // Click [placeholder="数字を入力"]
+  await page
+    .locator('[placeholder="数字を入力"]')
+    .fill(`${config.trainPass.oneMonthFee}`);
+
   const [fileChooser] = await Promise.all([
     // It is important to call waitForEvent before click to set up waiting.
     page.waitForEvent("filechooser"),
     // Opens the file chooser.
     page.locator('button:has-text("ICカード読込(CSVデータ)")').click(),
   ]);
-  await fileChooser.setFiles("myfile.pdf");
+  await fileChooser.setFiles("data.csv");
+
+  // Check text=利用日 出発駅 到着駅 金額 >> input[type="checkbox"]
+  await page
+    .locator('text=利用日 出発駅 到着駅 金額 >> input[type="checkbox"]')
+    .check();
+  // Click button:has-text("交通費明細に追加する")
+  await page.locator('button:has-text("交通費明細に追加する")').click();
+
+  const inputs = page.locator('input[ng-model="row.traffic_way"]');
+
+  const inputCount = await inputs.count();
+
+  for (let i = 0; i < inputCount; i++) {
+    await inputs.nth(i).click();
+    await page
+      .locator("text=× 交通手段 OK キャンセル >> textarea")
+      .fill("電車");
+    await page.locator("text=OK").click();
+  }
+
+  // Click text=下書き保存
+  await Promise.all([
+    page.locator("text=下書き保存").click(),
+    page.waitForNavigation({ url: "https://ssl.wf.jobcan.jp/#/myrequests" }),
+  ]);
 });
