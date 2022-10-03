@@ -25,10 +25,10 @@ export const genICCardCSV = async (
     if (period.excludes?.includes(date)) {
       continue;
     }
-    if (period.weekdays.includes(day.day()) === false) {
-      continue;
-    }
-    if (period.days?.includes(date) === false) {
+    if (
+      period.weekdays.includes(day.day()) === false &&
+      period.days?.includes(date) === false
+    ) {
       continue;
     }
     routes.forEach(({ from, to, amount }) => {
