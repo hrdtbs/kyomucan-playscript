@@ -1,9 +1,39 @@
 # Kyomucan playscript
 
+## 使い方
+
+### インストール
+
+```command
+git clone git@github.com:hrdtbs/kyomucan-playscript.git
+cd kyomucan-playscript
+yarn install
+npx playwright install --with-deps
+```
+
+### 設定
+
+`config.tmp.ts`をコピーして、`config.ts`を作成します。
+
+設定については`types/index.ts`に記述された型を見てください。
+
+### 起動
+
+コマンドで雑に起動したい場合
+
+```command
+yarn test
+```
+
+動作を確認したい場合
+
+```command
+yarn dev
+```
+
 ## What
 
-`config.ts`の内容を元にとある会社の交通費精算申請の下書きと出退勤編集の保存を行います。
-設定については型を見てください。
+出退勤編集や交通費申請などを自動化するためのものです。
 
 とある会社用に組んでしまっていますが、少し`tests/main.spec.ts`を変更すれば他の環境でも使えると思います。
 
