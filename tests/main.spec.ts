@@ -22,16 +22,17 @@ test.beforeAll(async ({ browser }) => {
 
 test("出退勤編集", async () => {
   const { officeWork } = config;
-  // とりあえず設定と当月にズレがあれば行わない
-  if (officeWork?.month && officeWork.month - 1 === dayjs().month()) {
-    return;
-  }
+
+  await page.pause();
+
+  const month = (officeWork?.month && officeWork.month) || dayjs().month() + 1;
 
   // Click text=勤怠 >> nth=1
   const [page1] = await Promise.all([
     page.waitForEvent("popup"),
     page.locator("text=勤怠").nth(1).click(),
   ]);
+
   // Click a[role="button"]:has-text("打刻修正")
   await page1.locator('a[role="button"]:has-text("打刻修正")').click();
   // Click text=出退勤編集(1か月単位)
@@ -42,17 +43,25 @@ test("出退勤編集", async () => {
     page1.locator("text=出退勤編集(1か月単位)").click(),
   ]);
 
-  const firstDay = dayjs().startOf("month");
+  await page1.locator('select[name="month"]').selectOption(`${month}`);
+
+  const firstDay = dayjs().set("month", month).startOf("month");
   const dayCount = firstDay.daysInMonth();
 
   for (let date = 1; date < dayCount + 1; date++) {
-    const d = dayjs().set("date", date);
+    const d = firstDay.set("date", date);
     const day = d.day();
     const textarea = page1.locator(
       `textarea[name="memo\\[${
         new Date(d.year(), d.month(), date).getTime() / 1000
       }\\]"]`
     );
+
+    const visible = await textarea.isVisible();
+    if (visible === false) {
+      continue;
+    }
+
     // 土日は除く
     if (day === 0 || day === 6) {
       await textarea.fill("");
