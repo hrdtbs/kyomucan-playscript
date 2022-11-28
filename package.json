@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "dev": "PWDEBUG=1 playwright test"
+    "dev": "PWDEBUG=1 playwright test",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -22,7 +25,8 @@
     "@playwright/test": "^1.22.2"
   },
   "dependencies": {
-    "dayjs": "^1.11.2",
-    "iconv-lite": "^0.6.3"
+    "dayjs": "^1.11.6",
+    "iconv-lite": "^0.6.3",
+    "vite": "^3.2.4"
   }
 }
