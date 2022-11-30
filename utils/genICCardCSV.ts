@@ -26,7 +26,7 @@ export const genICCardCSV = async (
       continue;
     }
     if (
-      period.weekdays.includes(day.day()) === false ||
+      period.weekdays.includes(day.day()) === false &&
       period.days?.includes(date) === false
     ) {
       continue;
